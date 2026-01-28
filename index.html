@@ -95,14 +95,19 @@
 
     /* Big green card */
     .edu-card{
-      background:linear-gradient(90deg,var(--green),var(--green2));
-      border-radius:18px;
-      color:#fff;
-      padding:16px;
-      box-shadow: var(--shadow);
-      position:relative;
-      overflow:hidden;
-    }
+    background:linear-gradient(90deg,var(--green),var(--green2));
+    border-radius:18px;
+    color:#fff;
+    padding:20px 18px;
+    box-shadow: var(--shadow);
+    position:relative;
+    overflow:hidden;
+
+    /* 关键：避免内容被压扁或裁切 */
+    min-height: 120px;
+    display:flex;
+    align-items:center;
+  }
     .edu-card::after{
       content:"";
       position:absolute;
@@ -112,33 +117,41 @@
       border-radius:50%;
       filter: blur(0px);
     }
+
+
     .edu-card .row{
       display:flex;
-      align-items:center;
+      align-items:flex-start;
       justify-content:space-between;
       gap:12px;
+      width:100%;
     }
+    .edu-card .row > div:first-child{
+      flex: 1;
+      min-width: 0;
+    }
+
+
     .edu-card .school{
       font-size:26px;
       font-weight:900;
       margin:2px 0 10px;
     }
-    .edu-card .meta{
+    .edu-card .school{
+      font-size:28px;
+      font-weight:900;
+      margin:0 0 12px;
+      line-height:1.2;
+    }
+   .edu-card .meta{
       font-size:16px;
       opacity:.95;
       display:flex;
       gap:10px;
       flex-wrap:wrap;
-    }
-    .pill{
-      background:rgba(255,255,255,.22);
-      border:1px solid rgba(255,255,255,.25);
-      padding:6px 10px;
-      border-radius:999px;
-      font-size:13px;
-      font-weight:800;
-      white-space:nowrap;
-    }
+      line-height:1.4;
+   }
+
     .tap-hint{
       margin-top:12px;
       font-size:13px;
