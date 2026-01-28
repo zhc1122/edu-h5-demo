@@ -1,0 +1,612 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>高等教育信息</title>
+  <style>
+    :root{
+      --green:#26b37a;
+      --green2:#2fc08a;
+      --bg:#f5f6f7;
+      --text:#1f2328;
+      --muted:#8b949e;
+      --card:#ffffff;
+      --shadow: 0 10px 24px rgba(0,0,0,.08);
+      --radius:16px;
+    }
+    *{box-sizing:border-box}
+    body{
+      margin:0;
+      font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,"PingFang SC","Noto Sans SC","Microsoft YaHei",sans-serif;
+      background:var(--bg);
+      color:var(--text);
+    }
+    a{color:inherit; text-decoration:none}
+    .app{
+      max-width:480px;
+      margin:0 auto;
+      min-height:100vh;
+      background:var(--bg);
+    }
+
+    /* Top Bar */
+    .topbar{
+      background:var(--green);
+      color:#fff;
+      padding: calc(env(safe-area-inset-top) + 12px) 14px 14px;
+      position:sticky;
+      top:0;
+      z-index:10;
+    }
+    .topbar-row{
+      display:flex;
+      align-items:center;
+      gap:10px;
+    }
+    .back-btn{
+      width:36px;height:36px;
+      display:grid;place-items:center;
+      border-radius:10px;
+      background:rgba(255,255,255,.18);
+      border:1px solid rgba(255,255,255,.25);
+      cursor:pointer;
+      flex:0 0 auto;
+    }
+    .back-btn:active{transform:scale(.98)}
+    .topbar h1{
+      margin:0;
+      font-size:18px;
+      font-weight:700;
+      letter-spacing:.5px;
+      flex:1;
+      text-align:center;
+      padding-right:36px; /* 让标题视觉居中（抵消返回按钮宽度） */
+    }
+
+    /* Content */
+    .content{
+      padding:14px;
+      padding-bottom: calc(env(safe-area-inset-bottom) + 18px);
+    }
+    .section{
+      margin:14px 0 18px;
+    }
+    .section-head{
+      display:flex;
+      align-items:flex-end;
+      justify-content:space-between;
+      margin:0 2px 10px;
+      gap:10px;
+    }
+    .section-title{
+      font-size:18px;
+      font-weight:800;
+    }
+    .section-help{
+      font-size:13px;
+      color:#6b7280;
+      white-space:nowrap;
+    }
+    .section-help a{
+      color:var(--green);
+      font-weight:700;
+    }
+
+    /* Big green card */
+    .edu-card{
+      background:linear-gradient(90deg,var(--green),var(--green2));
+      border-radius:18px;
+      color:#fff;
+      padding:16px;
+      box-shadow: var(--shadow);
+      position:relative;
+      overflow:hidden;
+    }
+    .edu-card::after{
+      content:"";
+      position:absolute;
+      right:-40px; top:-40px;
+      width:140px; height:140px;
+      background:rgba(255,255,255,.10);
+      border-radius:50%;
+      filter: blur(0px);
+    }
+    .edu-card .row{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:12px;
+    }
+    .edu-card .school{
+      font-size:26px;
+      font-weight:900;
+      margin:2px 0 10px;
+    }
+    .edu-card .meta{
+      font-size:16px;
+      opacity:.95;
+      display:flex;
+      gap:10px;
+      flex-wrap:wrap;
+    }
+    .pill{
+      background:rgba(255,255,255,.22);
+      border:1px solid rgba(255,255,255,.25);
+      padding:6px 10px;
+      border-radius:999px;
+      font-size:13px;
+      font-weight:800;
+      white-space:nowrap;
+    }
+    .tap-hint{
+      margin-top:12px;
+      font-size:13px;
+      opacity:.9;
+      display:flex;
+      align-items:center;
+      gap:8px;
+    }
+    .tap-hint .dot{
+      width:6px;height:6px;border-radius:50%;
+      background:rgba(255,255,255,.9);
+    }
+
+    /* White info cards */
+    .info-card{
+      background:var(--card);
+      border-radius:18px;
+      box-shadow: 0 6px 16px rgba(0,0,0,.06);
+      padding:16px;
+    }
+    .empty-title{
+      font-size:22px;
+      font-weight:900;
+      text-align:center;
+      margin:8px 0 12px;
+    }
+    .center{
+      display:flex;
+      justify-content:center;
+      align-items:center;
+    }
+    .link-btn{
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      gap:8px;
+      padding:10px 14px;
+      border-radius:999px;
+      border:1px solid #e5e7eb;
+      background:#fff;
+      color:var(--green);
+      font-weight:800;
+      cursor:pointer;
+    }
+    .link-btn:active{transform:scale(.99)}
+    .muted{
+      color:#6b7280;
+      font-size:13px;
+      text-align:center;
+      line-height:1.5;
+    }
+
+    /* Detail page */
+    .banner{
+      background:linear-gradient(90deg,#dfe7ff,#f1e6ff);
+      border-radius:18px;
+      padding:14px;
+      box-shadow: 0 6px 16px rgba(0,0,0,.06);
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:10px;
+    }
+    .banner .t1{
+      font-size:20px;
+      font-weight:900;
+      color:#2b2f36;
+      margin:0;
+    }
+    .banner .t2{
+      margin:6px 0 0;
+      color:#4b5563;
+      font-size:13px;
+      line-height:1.4;
+    }
+    .illus{
+      width:84px;height:56px;
+      border-radius:14px;
+      background:rgba(255,255,255,.65);
+      display:grid;place-items:center;
+      flex:0 0 auto;
+      border:1px solid rgba(0,0,0,.05);
+    }
+
+    .profile-card{
+      margin-top:12px;
+      background:linear-gradient(90deg,var(--green),var(--green2));
+      border-radius:18px;
+      color:#fff;
+      padding:16px;
+      box-shadow: var(--shadow);
+    }
+    .profile-top{
+      display:flex;
+      gap:12px;
+      align-items:center;
+    }
+    .avatar{
+      width:62px;height:78px;
+      border-radius:10px;
+      background:rgba(255,255,255,.15);
+      border:1px solid rgba(255,255,255,.25);
+      display:grid;place-items:center;
+      overflow:hidden;
+      flex:0 0 auto;
+    }
+    .avatar small{
+      font-size:12px;
+      opacity:.9;
+      display:block;
+      text-align:center;
+      padding:6px;
+    }
+    .name{
+      font-size:22px;
+      font-weight:900;
+      margin:0 0 6px;
+    }
+    .subline{
+      opacity:.95;
+      font-size:14px;
+      display:flex;
+      gap:12px;
+      flex-wrap:wrap;
+      margin:0;
+    }
+    .photo-tabs{
+      margin-top:8px;
+      display:flex;
+      gap:12px;
+      font-size:12px;
+      opacity:.95;
+    }
+    .photo-tabs span{
+      display:inline-flex;
+      align-items:center;
+      gap:6px;
+    }
+    .photo-dot{
+      width:10px;height:10px;border-radius:3px;
+      background:rgba(255,255,255,.8);
+    }
+
+    .profile-school{
+      margin-top:14px;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:10px;
+    }
+    .profile-school .s1{
+      font-size:26px;
+      font-weight:900;
+      margin:0;
+    }
+    .profile-school .s2{
+      margin:6px 0 0;
+      opacity:.95;
+      font-size:16px;
+      display:flex;
+      gap:10px;
+      flex-wrap:wrap;
+    }
+
+    .kv-card{
+      margin-top:12px;
+      background:#fff;
+      border-radius:18px;
+      padding:14px 14px 6px;
+      box-shadow: 0 6px 16px rgba(0,0,0,.06);
+    }
+    .kv{
+      display:grid;
+      grid-template-columns: 1fr 1.4fr;
+      gap:0;
+      padding:10px 6px;
+      border-bottom:1px solid #f0f1f2;
+      align-items:center;
+    }
+    .kv:last-child{border-bottom:none}
+    .k{
+      color:#9aa1aa;
+      font-size:14px;
+    }
+    .v{
+      color:#111827;
+      font-size:16px;
+      font-weight:700;
+      text-align:left;
+      word-break:break-all;
+    }
+
+    .primary-btn{
+      margin-top:14px;
+      width:100%;
+      border:none;
+      background:var(--green);
+      color:#fff;
+      font-weight:900;
+      font-size:18px;
+      border-radius:14px;
+      padding:14px 16px;
+      box-shadow: 0 10px 20px rgba(38,179,122,.25);
+      cursor:pointer;
+    }
+    .primary-btn:active{transform:scale(.99)}
+    .hint-pill{
+      margin-top:10px;
+      display:flex;
+      justify-content:center;
+    }
+    .hint-pill span{
+      background:#3a3a3a;
+      color:#fff;
+      opacity:.85;
+      padding:8px 12px;
+      border-radius:999px;
+      font-size:12px;
+    }
+
+    /* Simple router */
+    .page{display:none}
+    .page.active{display:block}
+  </style>
+</head>
+
+<body>
+  <div class="app">
+
+    <!-- PAGE 1 -->
+    <section id="page-home" class="page active" aria-label="高等教育信息-首页">
+      <header class="topbar">
+        <div class="topbar-row">
+          <button class="back-btn" aria-label="返回" title="返回" onclick="goBack()">
+            <!-- left arrow -->
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+              <path d="M15 18l-6-6 6-6" stroke="white" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </button>
+          <h1>高等教育信息</h1>
+        </div>
+      </header>
+
+      <main class="content">
+        <div class="section">
+          <div class="section-head">
+            <div class="section-title">学籍信息（1）</div>
+            <div class="section-help">还有学籍没有显示出来？ <a href="javascript:void(0)">尝试绑定</a></div>
+          </div>
+
+          <a class="edu-card" href="#/detail" role="button" aria-label="进入学籍信息详情">
+            <div class="row">
+              <div>
+                <div class="school">南开大学</div>
+                <div class="meta">
+                  <span>电子信息科学与技术</span>
+                  <span style="opacity:.8">｜</span>
+                  <span>普通全日制</span>
+                </div>
+                <div class="tap-hint">
+                  <span class="dot"></span><span>点击查看详情</span>
+                </div>
+              </div>
+              <div class="pill">本科</div>
+            </div>
+          </a>
+        </div>
+
+        <div class="section">
+          <div class="section-head">
+            <div class="section-title">学历信息</div>
+            <div class="section-help">还有学历没有显示出来？ <a href="javascript:void(0)">尝试绑定</a></div>
+          </div>
+
+          <div class="info-card">
+            <div class="empty-title">没有找到您的学历信息</div>
+            <div class="center">
+              <button class="link-btn" onclick="toast('这里可跳转到“查看解决办法”')">
+                查看解决办法
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+                  <path d="M9 6l6 6-6 6" stroke="#26b37a" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <div class="section">
+          <div class="section-head">
+            <div class="section-title">学位信息</div>
+            <div class="section-help">还有学位没有显示出来？ <a href="javascript:void(0)">尝试绑定</a></div>
+          </div>
+
+          <div class="info-card">
+            <div class="empty-title" style="font-size:20px">您还未绑定学位信息，可以使用“尝试绑定学位”功能绑定您的学位</div>
+            <div class="center" style="margin-top:6px">
+              <button class="link-btn" onclick="toast('这里可跳转到“提示信息”')">
+                提示信息
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+                  <path d="M9 6l6 6-6 6" stroke="#26b37a" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <div class="section">
+          <div class="section-head">
+            <div class="section-title">考研信息</div>
+          </div>
+
+          <div class="info-card">
+            <div class="empty-title">您没有考研信息！</div>
+            <p class="muted">
+              您目前没有考研信息，系统提供2006年以来入学的硕士研究生报名和成绩数据。
+            </p>
+          </div>
+        </div>
+      </main>
+    </section>
+
+    <!-- PAGE 2 -->
+    <section id="page-detail" class="page" aria-label="学籍详情页">
+      <header class="topbar">
+        <div class="topbar-row">
+          <button class="back-btn" aria-label="返回" title="返回" onclick="goBack()">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+              <path d="M15 18l-6-6 6-6" stroke="white" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </button>
+          <h1>职场实习</h1>
+        </div>
+      </header>
+
+      <main class="content">
+        <div class="banner">
+          <div>
+            <p class="t1">职场实习</p>
+            <p class="t2">反馈实习困惑、实战心得与建议，帮大家实习少走弯路</p>
+          </div>
+          <div class="illus" aria-hidden="true">
+            <!-- simple illustration icon -->
+            <svg width="40" height="40" viewBox="0 0 24 24" fill="none">
+              <path d="M4 18h16" stroke="#6b7280" stroke-width="2" stroke-linecap="round"/>
+              <path d="M7 17V8a2 2 0 0 1 2-2h6a2 2 0 0 1 2 2v9" stroke="#6b7280" stroke-width="2" stroke-linecap="round"/>
+              <path d="M9 10h6" stroke="#6b7280" stroke-width="2" stroke-linecap="round"/>
+            </svg>
+          </div>
+        </div>
+
+        <div class="profile-card">
+          <div class="profile-top">
+            <div class="avatar" title="录取照片">
+              <small>录取照片</small>
+            </div>
+            <div class="avatar" title="学历照片" style="background:rgba(255,255,255,.10)">
+              <small>学历照片</small>
+            </div>
+            <div style="flex:1">
+              <p class="name">张海成</p>
+              <p class="subline">
+                <span>男</span>
+                <span>1999年11月22日</span>
+              </p>
+              <div class="photo-tabs">
+                <span><i class="photo-dot"></i> 录取照片</span>
+                <span><i class="photo-dot"></i> 学历照片</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="profile-school">
+            <div>
+              <p class="s1">南开大学</p>
+              <p class="s2">
+                <span>电子科学与技术</span>
+                <span style="opacity:.8">｜</span>
+                <span>全日制</span>
+              </p>
+            </div>
+            <div class="pill">本科</div>
+          </div>
+        </div>
+
+        <div class="kv-card">
+          <div class="kv"><div class="k">民族</div><div class="v">汉族</div></div>
+          <div class="kv"><div class="k">证件号码</div><div class="v">371423199911225019</div></div>
+          <div class="kv"><div class="k">学制</div><div class="v">4 年</div></div>
+          <div class="kv"><div class="k">学历类别</div><div class="v">普通高等教育</div></div>
+          <div class="kv"><div class="k">分院</div><div class="v">电子信息与光学工程学院</div></div>
+          <div class="kv"><div class="k">系所</div><div class="v">—</div></div>
+          <div class="kv"><div class="k">班级</div><div class="v">—</div></div>
+          <div class="kv"><div class="k">学号</div><div class="v">1120220209</div></div>
+          <div class="kv"><div class="k">入学日期</div><div class="v">2022年09月06日</div></div>
+          <div class="kv"><div class="k">学籍状态</div><div class="v">在籍（注册学籍）</div></div>
+          <div class="kv"><div class="k">预计毕业日期</div><div class="v">2026年06月30日</div></div>
+        </div>
+
+        <button class="primary-btn" onclick="toast('这里可打开“验证报告”（示例中用提示代替）')">
+          查看验证报告
+        </button>
+
+        <div class="hint-pill">
+          <span>my.chsi.com.cn — 无痕浏览（示例提示）</span>
+        </div>
+      </main>
+    </section>
+
+  </div>
+
+  <script>
+    // --- Simple SPA Router (hash based) ---
+    const pages = {
+      home: document.getElementById('page-home'),
+      detail: document.getElementById('page-detail')
+    };
+
+    function renderRoute() {
+      const hash = location.hash || "#/home";
+      const route = hash.replace("#/", "");
+      Object.values(pages).forEach(p => p.classList.remove("active"));
+      if (route === "detail") pages.detail.classList.add("active");
+      else pages.home.classList.add("active");
+      // Home 页返回按钮：在真实App里会退出；这里提示一下
+    }
+
+    function goBack() {
+      // 如果当前在 detail，就回到 home；否则给个提示
+      const hash = location.hash || "#/home";
+      const route = hash.replace("#/", "");
+      if (route === "detail") {
+        location.hash = "#/home";
+      } else {
+        toast("已经在首页（示例中可自行改成关闭页面/返回上一页）");
+      }
+    }
+
+    window.addEventListener("hashchange", renderRoute);
+    renderRoute();
+
+    // --- Tiny toast ---
+    let toastTimer = null;
+    function toast(msg){
+      clearTimeout(toastTimer);
+
+      let t = document.getElementById("toast");
+      if(!t){
+        t = document.createElement("div");
+        t.id = "toast";
+        t.style.position = "fixed";
+        t.style.left = "50%";
+        t.style.bottom = "28px";
+        t.style.transform = "translateX(-50%)";
+        t.style.maxWidth = "92vw";
+        t.style.background = "rgba(0,0,0,.78)";
+        t.style.color = "#fff";
+        t.style.padding = "10px 14px";
+        t.style.borderRadius = "999px";
+        t.style.fontSize = "13px";
+        t.style.zIndex = "9999";
+        t.style.opacity = "0";
+        t.style.transition = "opacity .2s ease";
+        document.body.appendChild(t);
+      }
+      t.textContent = msg;
+      requestAnimationFrame(()=> t.style.opacity = "1");
+      toastTimer = setTimeout(()=> t.style.opacity = "0", 1700);
+    }
+  </script>
+</body>
+</html>
