@@ -6,6 +6,24 @@
   <title>学信档案 - Demo</title>
 
   <style>
+    .brand{
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      gap:10px;
+      margin-top:18px; /* 你可微调 */
+    }
+    .brand img{
+      width:38px;      /* 图标大小可调 */
+      height:38px;
+      object-fit:contain;
+    }
+    .brand .brand-text{
+      font-size:32px;  /* 文字大小按你原来的 */
+      font-weight:800;
+      letter-spacing:.2px;
+    }
+
     :root{
       --green:#26b37a;
       --green2:#2fc08a;
@@ -83,8 +101,29 @@
     /* ---------------------------
        Router
     ---------------------------- */
-    .page{display:none}
-    .page.active{display:block}
+    /* ---------------------------
+      Router (关键修复：页面覆盖式，不再上下堆叠)
+    ---------------------------- */
+    .app{
+      position: relative;
+      overflow: hidden;        /* 防止滑出看到下一页 */
+      min-height: 100vh;
+    }
+
+    /* 所有 page 叠在一起，只有 active 的显示 */
+    .page{
+      position: absolute;
+      inset: 0;                /* top/right/bottom/left = 0 */
+      display: none;
+      overflow-y: auto;        /* 页面内部滚动 */
+      -webkit-overflow-scrolling: touch;
+      background: var(--bg);
+    }
+
+    .page.active{
+      display: block;
+    }
+
 
     /* ---------------------------
        Page Login (图1)
@@ -649,6 +688,107 @@
       cursor:pointer;
     }
     .primary-btn:active{transform:scale(.99)}
+
+        /* 登录页整体容器：自适应上下间距 */
+    #page-login{
+      display:flex;
+      justify-content:center;
+    }
+
+    /* 登录内容区 */
+    .login-wrap{
+      width: 100%;
+      max-width: 420px;
+      margin: 0 auto;
+
+      /* 关键：纵向排列 + 自动间距 */
+      display: flex;
+      flex-direction: column;
+
+      /* 控制整体上下留白（自适应） */
+      padding: clamp(26px, 6vh, 56px) 18px 22px;
+
+      /* 关键：统一控制模块间距 */
+      gap: clamp(14px, 2.6vh, 26px);
+    }
+
+    /* logo + 标题 */
+    .brand{
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      gap:12px;
+      margin-top: 0; /* 交给 gap 控制 */
+    }
+    .brand img{
+      width: 44px;
+      height: 44px;
+      object-fit: contain;
+    }
+    .brand-text{
+      font-size: 42px;
+      font-weight: 900;
+      letter-spacing: .2px;
+    }
+
+    /* 副标题 */
+    .login-sub{
+      margin: 0;
+      text-align: center;
+      font-size: 18px;
+      color: #6b7280;
+      letter-spacing: .2px;
+    }
+
+    /* 表单区：输入框和按钮之间也用 gap */
+    .form{
+      display:flex;
+      flex-direction:column;
+      gap: 16px;
+      margin-top: 6px;
+    }
+
+    /* 输入框高度更接近原版 */
+    .input{
+      height: 64px;
+      font-size: 18px;
+      padding: 0 18px;
+      border-radius: 14px;
+    }
+
+    /* 登录按钮 */
+    .login-btn{
+      height: 66px;
+      border-radius: 14px;
+      font-size: 22px;
+      font-weight: 800;
+      margin-top: 6px;
+    }
+
+    /* 找回密码 / 注册 */
+    .login-links{
+      display:flex;
+      justify-content:space-between;
+      margin-top: 2px;
+      font-size: 18px;
+      color: #6b7280;
+    }
+
+    /* 底部信息：自动靠下（自适应） */
+    .login-footer{
+      margin-top: auto; /* 关键：把 footer 推到页面底部 */
+      padding-top: 10px;
+    }
+
+    /* 底部导航 */
+    .login-footer .nav{
+      display:flex;
+      justify-content:center;
+      gap: 28px;
+      color:#6b7280;
+      font-size: 16px;
+    }
+
   </style>
 </head>
 
@@ -658,19 +798,17 @@
     <!-- PAGE A: Login -->
     <section id="page-login" class="page active" aria-label="学信档案-登录">
       <div class="login-wrap">
-        <div class="logo">
-          <div class="logo-badge" aria-hidden="true"></div>
-          <div class="logo-title">学信档案</div>
+        <div class="brand">
+        <img src="./xuexin.png" alt="学信档案" />
+        <div class="brand-text">学信档案</div>
         </div>
+
 
         <p class="login-sub">请使用 学信网账号 进行登录</p>
 
         <div class="form">
-          <input class="input" id="login-account" placeholder="请输入账号" value="18853430974" />
+          <input class="input" id="login-account" placeholder="请输入账号" value="" />
           <input class="input" id="login-password" placeholder="密码" type="password" />
-          <div style="height:62px;background:#fff;border-radius:10px;border:1px solid #e5e7eb;display:flex;align-items:center;justify-content:center;color:#9aa1aa;">
-            验证码区域（示意）
-          </div>
 
           <button class="login-btn" onclick="doLogin()">登录</button>
         </div>
@@ -694,17 +832,19 @@
     <!-- PAGE B: Portal -->
     <section id="page-portal" class="page" aria-label="学信档案-首页">
       <header class="portal-topbar">
-        <div class="portal-row">
-          <div class="portal-title">学信档案</div>
-          <button class="exit" aria-label="退出" onclick="toast('退出（示例）')">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
-              <path d="M10 17l5-5-5-5" stroke="#fff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
-              <path d="M15 12H3" stroke="#fff" stroke-width="2.4" stroke-linecap="round"/>
-              <path d="M21 3v18" stroke="#fff" stroke-width="2.4" stroke-linecap="round"/>
-            </svg>
-          </button>
-        </div>
-      </header>
+    <div class="portal-row">
+      <!-- 左侧返回 -->
+      <button class="back-btn" aria-label="返回" onclick="goto('#/login')" style="position:absolute;left:0;">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+          <path d="M15 18l-6-6 6-6" stroke="white" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </button>
+
+      <div class="portal-title">学信档案</div>
+
+    </div>
+  </header>
+
 
       <main class="content">
         <div class="portal-card portal-recommend">
