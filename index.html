@@ -4,6 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
   <title>高等教育信息</title>
+
   <style>
     :root{
       --green:#26b37a;
@@ -13,16 +14,24 @@
       --muted:#8b949e;
       --card:#ffffff;
       --shadow: 0 10px 24px rgba(0,0,0,.08);
-      --radius:16px;
     }
-    *{box-sizing:border-box}
+
+    *{
+      box-sizing:border-box;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+
     body{
       margin:0;
-      font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,"PingFang SC","Noto Sans SC","Microsoft YaHei",sans-serif;
+      font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Helvetica Neue",Helvetica,Arial,sans-serif;
       background:var(--bg);
       color:var(--text);
+      font-weight:400;
     }
-    a{color:inherit; text-decoration:none}
+
+    a{color:inherit;text-decoration:none}
+
     .app{
       max-width:480px;
       margin:0 auto;
@@ -58,10 +67,10 @@
       margin:0;
       font-size:18px;
       font-weight:700;
-      letter-spacing:.5px;
+      letter-spacing:.2px;
       flex:1;
       text-align:center;
-      padding-right:36px; /* 让标题视觉居中（抵消返回按钮宽度） */
+      padding-right:36px; /* 视觉居中 */
     }
 
     /* Content */
@@ -81,7 +90,8 @@
     }
     .section-title{
       font-size:18px;
-      font-weight:800;
+      font-weight:700; /* 更接近原版 */
+      letter-spacing:.2px;
     }
     .section-help{
       font-size:13px;
@@ -90,34 +100,30 @@
     }
     .section-help a{
       color:var(--green);
-      font-weight:700;
+      font-weight:600;
     }
 
-    /* Big green card */
+    /* Green card (Home list) */
     .edu-card{
-    background:linear-gradient(90deg,var(--green),var(--green2));
-    border-radius:18px;
-    color:#fff;
-    padding:20px 18px;
-    box-shadow: var(--shadow);
-    position:relative;
-    overflow:hidden;
-
-    /* 关键：避免内容被压扁或裁切 */
-    min-height: 120px;
-    display:flex;
-    align-items:center;
-  }
+      background:linear-gradient(90deg,var(--green),var(--green2));
+      border-radius:18px;
+      color:#fff;
+      padding:18px 18px;
+      box-shadow: var(--shadow);
+      position:relative;
+      overflow:hidden;
+      min-height:118px;
+      display:flex;
+      align-items:center;
+    }
     .edu-card::after{
       content:"";
       position:absolute;
-      right:-40px; top:-40px;
-      width:140px; height:140px;
+      right:-30px; top:-34px;
+      width:150px; height:150px;
       background:rgba(255,255,255,.10);
       border-radius:50%;
-      filter: blur(0px);
     }
-
 
     .edu-card .row{
       display:flex;
@@ -127,35 +133,43 @@
       width:100%;
     }
     .edu-card .row > div:first-child{
-      flex: 1;
-      min-width: 0;
+      flex:1;
+      min-width:0;
     }
 
-
     .edu-card .school{
-      font-size:26px;
-      font-weight:900;
-      margin:2px 0 10px;
+      font-size:24px;
+      font-weight:700;
+      margin:0 0 10px;
+      line-height:1.15;
+      letter-spacing:.2px;
     }
-    .edu-card .school{
-      font-size:28px;
-      font-weight:900;
-      margin:0 0 12px;
-      line-height:1.2;
-    }
-   .edu-card .meta{
-      font-size:16px;
+    .edu-card .meta{
+      font-size:15px;
+      font-weight:400;
       opacity:.95;
+      line-height:1.5;
       display:flex;
       gap:10px;
       flex-wrap:wrap;
-      line-height:1.4;
-   }
+    }
+
+    .pill{
+      background:rgba(255,255,255,.16);
+      border:1px solid rgba(255,255,255,.22);
+      padding:6px 12px;
+      border-radius:999px;
+      font-size:14px;
+      font-weight:600;
+      white-space:nowrap;
+      margin-top:2px;
+    }
 
     .tap-hint{
-      margin-top:12px;
+      margin-top:10px;
       font-size:13px;
-      opacity:.9;
+      font-weight:400;
+      opacity:.75; /* 原版更淡 */
       display:flex;
       align-items:center;
       gap:8px;
@@ -174,9 +188,10 @@
     }
     .empty-title{
       font-size:22px;
-      font-weight:900;
+      font-weight:800; /* 900太粗 */
       text-align:center;
       margin:8px 0 12px;
+      letter-spacing:.2px;
     }
     .center{
       display:flex;
@@ -193,7 +208,7 @@
       border:1px solid #e5e7eb;
       background:#fff;
       color:var(--green);
-      font-weight:800;
+      font-weight:700;
       cursor:pointer;
     }
     .link-btn:active{transform:scale(.99)}
@@ -201,10 +216,11 @@
       color:#6b7280;
       font-size:13px;
       text-align:center;
-      line-height:1.5;
+      line-height:1.55;
+      margin:0;
     }
 
-    /* Detail page */
+    /* Detail page banner */
     .banner{
       background:linear-gradient(90deg,#dfe7ff,#f1e6ff);
       border-radius:18px;
@@ -217,7 +233,7 @@
     }
     .banner .t1{
       font-size:20px;
-      font-weight:900;
+      font-weight:800;
       color:#2b2f36;
       margin:0;
     }
@@ -236,6 +252,7 @@
       border:1px solid rgba(0,0,0,.05);
     }
 
+    /* Detail page profile card */
     .profile-card{
       margin-top:12px;
       background:linear-gradient(90deg,var(--green),var(--green2));
@@ -243,11 +260,24 @@
       color:#fff;
       padding:16px;
       box-shadow: var(--shadow);
+      position:relative;
+      overflow:hidden;
     }
+    .profile-card::after{
+      content:"";
+      position:absolute;
+      right:-26px; top:-30px;
+      width:160px;height:160px;
+      background:rgba(255,255,255,.10);
+      border-radius:50%;
+    }
+
     .profile-top{
       display:flex;
       gap:12px;
       align-items:center;
+      position:relative;
+      z-index:1;
     }
     .avatar{
       width:62px;height:78px;
@@ -273,33 +303,19 @@
     }
 
     .name{
-      font-size:22px;
-      font-weight:900;
+      font-size:24px;
+      font-weight:700;
       margin:0 0 6px;
+      letter-spacing:.2px;
     }
     .subline{
-      opacity:.95;
-      font-size:14px;
+      opacity:.92;
+      font-size:15px;
+      font-weight:400;
       display:flex;
       gap:12px;
       flex-wrap:wrap;
       margin:0;
-    }
-    .photo-tabs{
-      margin-top:8px;
-      display:flex;
-      gap:12px;
-      font-size:12px;
-      opacity:.95;
-    }
-    .photo-tabs span{
-      display:inline-flex;
-      align-items:center;
-      gap:6px;
-    }
-    .photo-dot{
-      width:10px;height:10px;border-radius:3px;
-      background:rgba(255,255,255,.8);
     }
 
     .profile-school{
@@ -308,45 +324,53 @@
       align-items:center;
       justify-content:space-between;
       gap:10px;
+      position:relative;
+      z-index:1;
     }
     .profile-school .s1{
       font-size:26px;
-      font-weight:900;
+      font-weight:800;
       margin:0;
+      letter-spacing:.2px;
     }
     .profile-school .s2{
       margin:6px 0 0;
       opacity:.95;
-      font-size:16px;
+      font-size:15px;
+      font-weight:400;
       display:flex;
       gap:10px;
       flex-wrap:wrap;
     }
 
+    /* Detail page key-value card */
     .kv-card{
       margin-top:12px;
       background:#fff;
       border-radius:18px;
-      padding:14px 14px 6px;
+      padding:10px 14px;
       box-shadow: 0 6px 16px rgba(0,0,0,.06);
     }
     .kv{
       display:grid;
-      grid-template-columns: 1fr 1.4fr;
+      grid-template-columns: 1fr 1.55fr;
       gap:0;
-      padding:10px 6px;
+      padding:12px 4px;
       border-bottom:1px solid #f0f1f2;
       align-items:center;
     }
     .kv:last-child{border-bottom:none}
+
     .k{
       color:#9aa1aa;
-      font-size:14px;
+      font-size:15px;
+      font-weight:400;
     }
     .v{
       color:#111827;
-      font-size:16px;
-      font-weight:700;
+      font-size:17px;
+      font-weight:600; /* 关键：不再粗黑 */
+      letter-spacing:.2px;
       text-align:left;
       word-break:break-all;
     }
@@ -357,7 +381,7 @@
       border:none;
       background:var(--green);
       color:#fff;
-      font-weight:900;
+      font-weight:800;
       font-size:18px;
       border-radius:14px;
       padding:14px 16px;
@@ -365,19 +389,6 @@
       cursor:pointer;
     }
     .primary-btn:active{transform:scale(.99)}
-    .hint-pill{
-      margin-top:10px;
-      display:flex;
-      justify-content:center;
-    }
-    .hint-pill span{
-      background:#3a3a3a;
-      color:#fff;
-      opacity:.85;
-      padding:8px 12px;
-      border-radius:999px;
-      font-size:12px;
-    }
 
     /* Simple router */
     .page{display:none}
@@ -393,7 +404,6 @@
       <header class="topbar">
         <div class="topbar-row">
           <button class="back-btn" aria-label="返回" title="返回" onclick="goBack()">
-            <!-- left arrow -->
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
               <path d="M15 18l-6-6 6-6" stroke="white" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
             </svg>
@@ -453,7 +463,7 @@
           </div>
 
           <div class="info-card">
-            <div class="empty-title" style="font-size:20px">您还未绑定学位信息，可以使用“尝试绑定学位”功能绑定您的学位</div>
+            <div class="empty-title" style="font-size:20px;font-weight:800">您还未绑定学位信息，可以使用“尝试绑定学位”功能绑定您的学位</div>
             <div class="center" style="margin-top:6px">
               <button class="link-btn" onclick="toast('这里可跳转到“提示信息”')">
                 提示信息
@@ -471,7 +481,7 @@
           </div>
 
           <div class="info-card">
-            <div class="empty-title">您没有考研信息！</div>
+            <div class="empty-title" style="font-weight:800">您没有考研信息！</div>
             <p class="muted">
               您目前没有考研信息，系统提供2006年以来入学的硕士研究生报名和成绩数据。
             </p>
@@ -500,7 +510,6 @@
             <p class="t2">反馈实习困惑、实战心得与建议，帮大家实习少走弯路</p>
           </div>
           <div class="illus" aria-hidden="true">
-            <!-- simple illustration icon -->
             <svg width="40" height="40" viewBox="0 0 24 24" fill="none">
               <path d="M4 18h16" stroke="#6b7280" stroke-width="2" stroke-linecap="round"/>
               <path d="M7 17V8a2 2 0 0 1 2-2h6a2 2 0 0 1 2 2v9" stroke="#6b7280" stroke-width="2" stroke-linecap="round"/>
@@ -512,12 +521,14 @@
         <div class="profile-card">
           <div class="profile-top">
             <div class="avatar" title="录取照片">
-              <img src="./admission.jpg" alt="录取照片">
+              <img src="./admission.jpg" alt="录取照片" onerror="this.style.display='none'; this.parentElement.innerHTML='<small>录取照片</small>';">
             </div>
+
             <div class="avatar" title="学历照片" style="background:rgba(255,255,255,.10)">
               <small>学历照片</small>
             </div>
-            <div style="flex:1">
+
+            <div style="flex:1; position:relative; z-index:1;">
               <p class="name">张海成</p>
               <p class="subline">
                 <span>男</span>
@@ -563,7 +574,6 @@
   </div>
 
   <script>
-    // --- Simple SPA Router (hash based) ---
     const pages = {
       home: document.getElementById('page-home'),
       detail: document.getElementById('page-detail')
@@ -575,24 +585,21 @@
       Object.values(pages).forEach(p => p.classList.remove("active"));
       if (route === "detail") pages.detail.classList.add("active");
       else pages.home.classList.add("active");
-      // Home 页返回按钮：在真实App里会退出；这里提示一下
     }
 
     function goBack() {
-      // 如果当前在 detail，就回到 home；否则给个提示
       const hash = location.hash || "#/home";
       const route = hash.replace("#/", "");
       if (route === "detail") {
         location.hash = "#/home";
       } else {
-        toast("已经在首页（示例中可自行改成关闭页面/返回上一页）");
+        toast("已经在首页");
       }
     }
 
     window.addEventListener("hashchange", renderRoute);
     renderRoute();
 
-    // --- Tiny toast ---
     let toastTimer = null;
     function toast(msg){
       clearTimeout(toastTimer);
